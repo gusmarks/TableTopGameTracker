@@ -1,0 +1,2 @@
+Name,Source,Size,Type,Alignment,AC,HP,Speed,Strength,Dexterity,Constitution,Intelligence,Wisdom,Charisma,Saving Throws,Skills,Damage Vulnerabilities,Damage Resistances,Damage Immunities,Condition Immunities,Senses,Languages,CR,Traits,Actions,Bonus Actions,Reactions,Legendary Actions,Mythic Actions,Lair Actions,Regional Effects,Environment
+Camel,MM,Large,beast,unaligned,9,15 (2d10 + 4),50 ft.,16,8,14,2,8,5,,,,,,,passive Perception 9,—,1/8 (25 XP),," Bite. Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.",,,,,,,Desert
