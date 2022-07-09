@@ -1,12 +1,9 @@
-from cProfile import label
-#import PySide6.QtCore
 import sys
-#import random
 import os
 import mariadb
 import pathlib
-from code.DM import *
-from code.AdventureSelectionDialog import *
+from DM import *
+from AdventureSelectionDialog import *
 from PySide6 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QInputDialog, QWidget
 import PySide6

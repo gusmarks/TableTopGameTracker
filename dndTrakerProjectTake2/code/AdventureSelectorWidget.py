@@ -1,16 +1,17 @@
-from cProfile import label
 import  shutil
 from PyQt5.QtCore import Qt
 from PySide6 import  QtWidgets,QtGui,QtCore
 import mariadb
 import os
-from code.DM import * 
-from code.AdventureIcon import *
-from code.AdventureClass import *
+from DM import * 
+from AdventureIcon import *
+from AdventureClass import *
 class AdventureCreatorWidget(QtWidgets.QWidget):
-    def __init__(self,dm):
+    def __init__(self,dm,parent):
         super().__init__()
         self.currentDm = dm
+        self.Adventure = None
+        self.Parent=parent
         self.layout = QtWidgets.QVBoxLayout(self)
         self.label = QtWidgets.QLabel("Adventure Creation")
 
@@ -19,11 +20,7 @@ class AdventureCreatorWidget(QtWidgets.QWidget):
         self.AdventureType.addItem("DND")
         self.AdventureType.addItem("COC")
         self.AdventureType.addItem("TNG")
-
         self.newAdventBttn =QtWidgets.QPushButton("New Adventure")
-
-        self.Adventure = None
-
 
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.AdventureName)
@@ -71,9 +68,21 @@ class AdventureCreatorWidget(QtWidgets.QWidget):
             os.makedirs(self.currentDm.getPath()+AdventurePath  +"/"+ E)
         
         shutil.copy2(tmpPath+"/"+self.AdventureType.currentText() +".png",self.currentDm.getPath()+AdventurePath+"/"+self.AdventureType.currentText() +".png")
-        self.Adventure= Adevrnture(self.AdventureName,self.currentDm.getPath()+AdventurePath,self.AdventureType)
+        self.Adventure= Adventure(self.AdventureName.text(),self.currentDm.getPath()+AdventurePath,self.AdventureType)
+        if(self.Adventure!= None):
+           self.setAdv(self.Adventure)
+           self.Parent.done(0)
     def getAdv(self):
         return self.Adventure
+    def getParent(self):
+        return self.Parent
+    def setAdv(self,Adv):
+        self.adventure=Adv
+        self.setDmAdventure(self.adventure)
+
+    def setDmAdventure(self,adv):
+        self.currentDm.setCurrentAdv(adv)
+
 
 class AdventureSelectorWidget(QtWidgets.QWidget):
     def __init__(self,dm,parent):
@@ -94,11 +103,14 @@ class AdventureSelectorWidget(QtWidgets.QWidget):
     
     def getParent(self):
         return self.Parent
+
     def setupAdventureWidgets(self,AdventurewidgetsInfo):
         row=0
         col=0
         for entry in AdventurewidgetsInfo:
-            tempwidget=AdventureIcon(entry[0],self.currentDm.getPath()+entry[2],entry[3],self)
+            tempAdv = Adventure(entry[0],self.currentDm.getPath()+entry[2],entry[3])
+            tempwidget=AdventureIcon(tempAdv,self)
+
             self.Adventurewidgets.append(tempwidget)
             self.Gridlayout.addWidget(tempwidget,row,col,QtCore.Qt.AlignLeft)
             
@@ -107,11 +119,6 @@ class AdventureSelectorWidget(QtWidgets.QWidget):
             if(col>3):
                 col=col=0
                 row=row+1
-        #load the path, image path, adventure name, and adventure type
-    #def setIconsClickable(self):
-        #for entry in self.Adventurewidgets:
-         #   print("made it here")
-         #   entry.clicked.connect(entry.getAdv())
     def loadAdventures(self):
         try:
             conn = mariadb.connect(
@@ -120,20 +127,17 @@ class AdventureSelectorWidget(QtWidgets.QWidget):
                 host="localhost",
                 port=3306,
                 database="DnDAdventures"
-                
-
              )
         except mariadb.Error as e:
           print(f"Error connecting to MariaDB Platform: {e}")
-
         cur = conn.cursor()
-
-
         sql = "SELECT * FROM Adventures WHERE DMname = %s"
         data = (self.currentDm.getName(),)
         cur.execute(sql,data)
         for E in cur:
             self.AdventurewidgetsInfo.append(E)
+
+
 
        
         #add loaded data to AdventureWidgetsInfo and pass to setupAdventureWidgets

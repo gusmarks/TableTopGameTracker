@@ -1,17 +1,15 @@
-from fileinput import filename
-from imp import load_compiled
-import PySide6.QtCore
-import mariadb
 import sys
 import os
 import pathlib
 import csv
+sys.path.insert(0, 'code')
 
-from code.MainFrame import *
+import MainFrame
 
 from PyQt5.QtWidgets import QInputDialog
 from PySide6 import  QtWidgets
-from PySide6 import *
+
+
 def testing(self):
     AdventureName = QInputDialog.getText(self,"aan","naa")
 
@@ -54,7 +52,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
   
 
-    Frame = MainFrame()
+    Frame = MainFrame.MainFrame()
     Frame.resize(1000, 700)
     Frame.show()
 

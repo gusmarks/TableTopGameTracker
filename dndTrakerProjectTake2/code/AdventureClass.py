@@ -6,10 +6,14 @@ class Adventure:
         self.name = Name
         self.path =Path
         self.type = Type
-        self.EnemyList=None
-        self.CharList = None
+        self.EnemyList=[]
+        self.CharList = []
+        self.storyList = []
+        self.mapslist=[]
+        self.notesList = []
+        self.currentEnemy = None
+        self.currentChar = None
         self.currentStory = None
-        self.mapslist=None
         self.currentMap=None
         self.CurrentNotes = None
     #name
@@ -59,15 +63,30 @@ class Adventure:
     #enemylist
     def getEnemyList(self):
         return self.EnemyList
-    def addtoCharList(self,ENM):
-        self.EnemyList.append(ENM)
-    def removeCharfromList(self,ENM):
+    def addtoEnemyList(self,ENM,EnmName):
+        self.EnemyList.append((ENM,EnmName))
+    def removeEnemyfromList(self,ENM):
         self.EnemyList.remove(ENM)
 
     #mapslist
     def getMapList(self):
         return self.mapslist
-    def addtoCharList(self,newmap):
-        self.mapslist.append(newmap)
-    def removeCharfromList(self,map):
+    def addtoMapList(self,newmap,mapName):
+        self.mapslist.append((newmap,mapName))
+    def removeMapfromList(self,map):
         self.mapslist.remove(map)
+
+    #Noteslist
+    def getNotesList(self):
+        return self.notesList
+    def addtoNotesList(self,Note,notename):
+        self.notesList.append((Note,notename))
+    def removeFromNotesList(self,Note):
+        self.notesList.remove(Note)
+    #story list
+    def getStoryList(self):
+        return self.storyList
+    def addtoStoryList(self,Note,storyname):
+        self.storyList.append((Note,storyname))
+    def removeFromStoryList(self,story):
+        self.storyList.remove(story)

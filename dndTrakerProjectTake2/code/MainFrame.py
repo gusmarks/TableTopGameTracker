@@ -1,16 +1,38 @@
-from cProfile import label
 from PyQt5.QtGui import QImage, QPainter, QPicture, QPixmap, QPixmap
 from PyQt5.QtWidgets import QLabel, QPushButton, QTextEdit, QVBoxLayout, QWidget
 from PySide6 import QtCore, QtWidgets, QtGui
 import sys
-from code.EnemyWidget import *
-from code.DmLogin import *
-from code.AdventureSelectionDialog import *
+from EnemyWidget import *
+from DmLogin import *
+from AdventureSelectionDialog import *
+from MapsPage import *
+from NotesPage import *
+from StoryPage import *
+from CharicterPage import *
 
 
 class MainFrame(QtWidgets.QMainWindow):
+
+    def __init__(self):
+        # body of the constructor
+        super().__init__()
+        self.currentdm = None
+        self.currentAdventure = None
+        self.openDmLogin()
+        self.BuildStatusAndMenuBars()
+
+        self.openAdvSelect()
+        self.getCurrentDm().loadMapsFromFolder()
+        self.getCurrentDm().loadNotesFromFolder()
+        self.getCurrentDm().loadStoryFromFolder()
+        self.getCurrentDm().loadEnemiesFromFolder()
+        self.BuildTabWidget()
+
+
     def getCurrentDm(self):
         return self.currentdm
+    def getCurrentAdv(self):
+        return self.currentAdventure
     def BuildStatusAndMenuBars(self):
 
         self.menu = QtWidgets.QMenuBar(self)
@@ -49,27 +71,21 @@ class MainFrame(QtWidgets.QMainWindow):
 
     def BuildTabWidget(self):
         # Maps page
-        imgHolder = QtWidgets.QLabel()
-        img = QtGui.QPixmap("")
-        Width = imgHolder.width()
-        Height = imgHolder.height()
-        imgHolder.setPixmap(img.scaled(
-            Width, Height, QtCore.Qt.KeepAspectRatio))
-        imgHolder.show()
-        # story page
-        StoryEdit = QtWidgets.QTextEdit()
+        maps= mapsPage(self)
+        #story page
+        StoryEdit = StoryPage(self)
         # Characters page
-        PlaceHolder1 = QtWidgets.QLabel("Placeholder")
+        PlaceHolder1 = CharicterPage(self)
         # Enemies page
-        PlaceHolder2 = EnemiesPage(self)
+        enmiesWidget = EnemiesPage(self)
         # Notes page
-        NotesEdit = QtWidgets.QTextEdit()
+        NotesEdit = notesPage(self)
         # tabWidget
         tabWidget = QtWidgets.QTabWidget()
-        tabWidget.addTab(imgHolder, "Maps")
+        tabWidget.addTab(maps, "Maps")
         tabWidget.addTab(StoryEdit, "Story")
         tabWidget.addTab(PlaceHolder1, "Characters")
-        tabWidget.addTab(PlaceHolder2, "Enemies")
+        tabWidget.addTab(enmiesWidget, "Enemies")
         tabWidget.addTab(NotesEdit, "Notes")
         tabWidget.setTabVisible(0, True)
         tabWidget.show()
@@ -94,14 +110,4 @@ class MainFrame(QtWidgets.QMainWindow):
             self.stat2.showMessage("Adventure: "+tempadv.getName())
 
 
-    def __init__(self):
-        # body of the constructor
-        super().__init__()
-        self.currentdm = None
-        self.openDmLogin()
-        self.BuildStatusAndMenuBars()
-
-        self.openAdvSelect()
-        
-        self.BuildTabWidget()
-        #self.BuildDockWidgets()
+   
